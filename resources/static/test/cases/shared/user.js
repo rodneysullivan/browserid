@@ -131,25 +131,26 @@ var vep = require("./vep");
     equal(0, count, "after clearing, there are no identities");
   });
 
-  asyncTest("createSecondaryUser", function() {
-    lib.createSecondaryUser("testuser@testuser.com", function(status) {
+  asyncTest("createSecondaryUser success - callback with true status", function() {
+    lib.createSecondaryUser("testuser@testuser.com", "password", function(status) {
       ok(status, "user created");
       start();
     }, testHelpers.unexpectedXHRFailure);
   });
 
-  asyncTest("createSecondaryUser with user creation refused", function() {
+  asyncTest("createSecondaryUser throttled - callback with false status", function() {
     xhr.useResult("throttle");
 
-    lib.createSecondaryUser("testuser@testuser.com", function(status) {
+    lib.createSecondaryUser("testuser@testuser.com", "password", function(status) {
       equal(status, false, "user creation refused");
       start();
     }, testHelpers.unexpectedXHRFailure);
   });
 
   asyncTest("createSecondaryUser with XHR failure", function() {
-    failureCheck(lib.createSecondaryUser, "testuser@testuser.com");
+    failureCheck(lib.createSecondaryUser, "testuser@testuser.com", "password");
   });
+
 
   asyncTest("createUser with unknown secondary happy case - expect 'secondary.verify'", function() {
     xhr.useResult("unknown_secondary");
